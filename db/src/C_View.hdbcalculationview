@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="C_View" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" application="BAS" historyEnabled="true">
+<descriptions defaultDescription="C_View"/>
+<localVariables>
+  <variable id="APPLICATIONUSER" type="session"/>
+  <variable id="IP_1" parameter="true">
+    <descriptions defaultDescription=""/>
+    <variableProperties datatype="NVARCHAR" length="13" mandatory="false">
+      <valueDomain type="empty"/>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="MY_BOOKSHOP_SALESTABLE">
+    <resourceUri>MY_BOOKSHOP_SALESTABLE</resourceUri>
+  </DataSource>
+  <DataSource id="D_View">
+    <resourceUri>D_View</resourceUri>
+  </DataSource>
+  <DataSource id="MY_BOOKSHOP_SALESREFTABLE">
+    <resourceUri>MY_BOOKSHOP_SALESREFTABLE</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_1" cardinality="C1_N" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="MY_BOOKSHOP_SALESTABLE" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="ORDER_ID" aggregationType="sum"/>
+      <viewAttribute id="CUSTOMER_ID" aggregationType="sum"/>
+      <viewAttribute id="SOLD_QTY" aggregationType="sum"/>
+      <viewAttribute id="CUSTOMERNAME"/>
+      <viewAttribute id="CONTACTFREQ"/>
+      <viewAttribute hidden="true" id="JOIN$CUSTOMER_ID$CUSTOMER_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="MY_BOOKSHOP_SALESTABLE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_ID" source="ORDER_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOLD_QTY" source="SOLD_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUSTOMER_ID$CUSTOMER_ID" source="CUSTOMER_ID"/>
+    </input>
+    <input node="D_View">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMERNAME" source="CUSTOMERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONTACTFREQ" source="CONTACTFREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUSTOMER_ID$CUSTOMER_ID" source="CUSTOMER_ID"/>
+    </input>
+    <joinAttribute name="JOIN$CUSTOMER_ID$CUSTOMER_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_2" cardinality="C1_N" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="MY_BOOKSHOP_SALESTABLE" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="ORDER_ID" aggregationType="sum"/>
+      <viewAttribute id="CUSTOMER_ID" aggregationType="sum"/>
+      <viewAttribute id="SOLD_QTY" aggregationType="sum"/>
+      <viewAttribute id="RETURN_QTY" aggregationType="sum"/>
+      <viewAttribute id="CUSTOMERNAME"/>
+      <viewAttribute id="CONTACTFREQ"/>
+      <viewAttribute hidden="true" id="JOIN$ORDER_ID$ORDER_ID_ORDER_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORDER_ID" source="ORDER_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_ID" source="CUSTOMER_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOLD_QTY" source="SOLD_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMERNAME" source="CUSTOMERNAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONTACTFREQ" source="CONTACTFREQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ORDER_ID$ORDER_ID_ORDER_ID" source="ORDER_ID"/>
+    </input>
+    <input node="MY_BOOKSHOP_SALESREFTABLE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="RETURN_QTY" source="RETURN_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ORDER_ID$ORDER_ID_ORDER_ID" source="ORDER_ID_ORDER_ID"/>
+    </input>
+    <joinAttribute name="JOIN$ORDER_ID$ORDER_ID_ORDER_ID"/>
+  </calculationView>
+</calculationViews>
+
+<logicalModel id="Join_1_2">
+  <attributes>
+    <attribute id="CUSTOMERNAME_1" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMERNAME_1"/>
+      <keyMapping columnObjectName="Join_1_2" columnName="CUSTOMERNAME"/>
+    </attribute>
+    <attribute id="CONTACTFREQ_1" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CONTACTFREQ_1"/>
+      <keyMapping columnObjectName="Join_1_2" columnName="CONTACTFREQ"/>
+    </attribute>
+    <attribute id="CUSTOMER_ID$local">
+      <descriptions defaultDescription="CUSTOMER_ID"/>
+      <keyMapping columnObjectName="Join_1_2" columnName="CUSTOMER_ID"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="SOLD_QTY" order="1" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="SOLD_QTY"/>
+      <measureMapping columnObjectName="Join_1_2" columnName="SOLD_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="RETURN_QTY" order="2" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="RETURN_QTY"/>
+      <measureMapping columnObjectName="Join_1_2" columnName="RETURN_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="ORDER_ID" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ORDER_ID"/>
+      <measureMapping columnObjectName="Join_1_2" columnName="ORDER_ID"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="CUSTOMER_ID_1" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CUSTOMER_ID_1"/>
+      <measureMapping columnObjectName="Join_1_2" columnName="CUSTOMER_ID"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+  <sharedDimensions>
+    <logicalJoin associatedObjectUri="D_View">
+      <attributes>
+        <attributeRef>CUSTOMER_ID$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>CUSTOMER_ID</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="C1_N" joinType="leftOuter" joinOperator="Equal"/>
+      <associatedAttributeFeatures/>
+    </logicalJoin>
+  </sharedDimensions>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="201"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="MY_BOOKSHOP_SALESTABLE" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="38" y="33"/>
+      <rectangleSize width="244.46875"/>
+    </shape>
+    <shape modelObjectName="MY_BOOKSHOP_SALESREFTABLE" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="268.46875"/>
+    </shape>
+    <shape modelObjectName="D_View" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="625" y="118"/>
+      <rectangleSize width="180.52587890625"/>
+    </shape>
+    <shape modelObjectName="Join_1_2" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+      <upperLeftCorner x="105" y="33"/>
+      <rectangleSize width="180.52587890625"/>
+    </shape>
+    <shape modelObjectName="D_View" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
